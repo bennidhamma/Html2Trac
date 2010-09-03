@@ -1,0 +1,7 @@
+dtd.o: dtd.c dtd.h dtd_types.h dtd_names.h
+
+dtd.h:
+
+dtd_types.h:
+
+dtd_names.h:

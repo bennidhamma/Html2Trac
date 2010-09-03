@@ -1,0 +1,25 @@
+HOW TO COMPILE AND INSTALL THE PROGRAM
+-----------------------------------------------------------------------
+
+Enter the main directory of the source distribution and type:
+
+$ ./configure
+$ make 
+
+If you want to install the program in your system, type then (it may
+require root priviledges):
+
+$ make install
+
+See ./INSTALL for more information.
+
+The program has been tested to compile on GNU/Linux and Windows (in
+both Cygwin and MinGW). If compiled in Cygwin, the program depends
+on "cygwin1.dll". 
+
+
+HOW TO RUN THE PROGRAM
+-----------------------------------------------------------------------
+
+See doc/html2xhtml.txt in the source code distribution, or the
+html2xhtml manpage, for full information about how to run the program.
