@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+	<appSettings>
+		<add key="tracUrl" value="https://your.server.org/trac/login/xmlrpc"/>
+		<add key="tracLogin" value=""/>
+		<add key="tracPassword" value=""/>
+	</appSettings>
+</configuration>

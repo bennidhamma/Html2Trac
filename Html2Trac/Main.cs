@@ -2,6 +2,7 @@ using System;
 using System.Xml;
 using System.IO;
 using System.Collections.Generic;
+using Mono.Options;
 
 namespace Html2Trac
 {
@@ -11,16 +12,63 @@ namespace Html2Trac
 		
 		public static void Main (string[] args)
 		{
+			string name = "", comment = "updated by Html2Trac";
+			bool showHelp = false;
+			bool useTrac = false;
+			var p = new OptionSet() {
+				{ "n|name=", "The page name to modify", s => name = s },
+				{ "c|comment:", "associate a comment", s => comment = s },
+				{ "t|trac", "use trac", v => useTrac = v != null },
+				{ "h|help", v => showHelp = v != null }
+			};
+			try
+			{
+				p.Parse(args);
+			}
+			catch (OptionException e)
+			{
+				ShowHelp(p);
+				return;
+			}
+			if (showHelp)
+			{
+				ShowHelp(p);
+				return;
+			}
+			
 			//string filename = args[0];
 			XmlDocument doc = new XmlDocument();
 			doc.Load(Console.In);
 			XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
 			nsmgr.AddNamespace("x", doc.DocumentElement.NamespaceURI);
-			WriteNode( doc.DocumentElement.SelectSingleNode("//x:body",nsmgr), Console.Out);
+			
+			TextWriter writer;
+			if (!useTrac)
+			{
+				writer = Console.Out;
+			}
+			else
+			{
+				writer = new StringWriter();
+			}
+			WriteNode( doc.DocumentElement.SelectSingleNode("//x:body",nsmgr), writer);
 //			foreach(XmlNode n in doc.DocumentElement.ChildNodes)
 //			{
 //				Console.WriteLine ("{0}, {1}, {2}", nsmgr.DefaultNamespace,n.NamespaceURI, n.Name);
 //			}
+			if (useTrac)
+			{
+				TracPutter.Put(name, writer.ToString(), comment);
+			}
+		}
+		
+		private static void ShowHelp(OptionSet p)
+		{
+			Console.WriteLine ("Usage: Html2Trac [OPTIONS]");
+			Console.WriteLine ("Converts html from stdin and posts to page");
+			Console.WriteLine ();
+			Console.WriteLine ("Options:");
+			p.WriteOptionDescriptions(Console.Out);
 		}
 		
 		private static void WriteNode(XmlNode node, TextWriter writer )
