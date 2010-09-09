@@ -76,6 +76,7 @@ namespace Html2Trac
 			if( node == null )
 				return;
 			bool newLine = true;
+			bool doubleNewLine = false;
 			bool closeTag = true;			
 			string tag = string.Empty;
 			bool popLiStack = false;
@@ -128,6 +129,12 @@ namespace Html2Trac
 				break;
 			case "p":
 				newLine = true;
+				if( liMarkers.Count == 0 )
+					doubleNewLine = true;
+				break;
+			case "img":
+				writer.WriteLine("[[Image({0})]]", node.Attributes["src"].Value);
+				newLine = false;
 				break;
 			default:
 				newLine = false;
@@ -145,6 +152,8 @@ namespace Html2Trac
 			if( closeTag )
 				writer.Write((newLine ? " " : "") + tag);
 			if( newLine )
+				writer.WriteLine();
+			if( doubleNewLine )
 				writer.WriteLine();
 			if( popLiStack )
 				liMarkers.Pop();
